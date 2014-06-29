@@ -8,6 +8,15 @@
         "js": {
             "public/build/js/dist.min.js": [
                 "public/system/lib/jquery/dist/jquery.min.js",
+                "public/system/excel/alertify.js",
+                "public/system/excel/jquery.handsontable.full.js",
+                "public/system/excel/underscore-min.js",
+                "public/system/excel/cptable.js",
+                "public/system/excel/cputils.js",
+                "public/system/excel/xls.js", "/public/system/excel/jszip.js",
+                "public/system/excel/xlsx.js",
+                "public/system/excel/shim.js",
+                "public/system/excel/spin.js",
                 "public/system/lib/angular/angular.js",
                 "public/system/lib/angular-socket-io/socket.js",
                 "public/system/lib/angular-mocks/angular-mocks.js",

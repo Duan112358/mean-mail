@@ -14,6 +14,7 @@ var mongoose = require('mongoose'),
 
 // Initializing system variables
 var config = require('./server/config/config');
+var sendMail = require('./server/config/mail');
 var db = mongoose.connect(config.db);
 var conn = mongoose.connection;
 var socketio = require('socket.io');
@@ -53,11 +54,15 @@ conn.once('open', function() {
     io.set('log level', 1); // reduce logging
 
     io.sockets.on('connection', function(socket) {
-        console.log('socket connected!');
 
         socket.on('send-msg', function(data) {
             socket.emit('back-msg', 'I got it.');
         });
+
+        socket.on('__send__all__mails__', function(data) {
+            sendMail(data, socket);
+            socket.emit('__all__sent__', 'mail all sent!');
+        })
     });
 
     console.log('MEAN app started on port ' + config.port + ' (' + process.env.NODE_ENV + ')');

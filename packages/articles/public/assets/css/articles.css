@@ -1,6 +1,58 @@
 h1 {
-	text-align: center
+    text-align: center
 }
 ul.articles li:not(:last-child) {
-	border-bottom: 1px solid #ccc
+    border-bottom: 1px solid #ccc
+}
+.drop-sheet {
+    border:2px dashed #bbb;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    padding:120px 25px;
+    margin-top: 10px;
+    text-align:center;
+    font:20pt bold, "Vollkorn";
+    color:#bbb;
+    clear: both;
+}
+
+.btn {
+    display: block;
+    float: left;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.btn.send {
+    float: right !important;
+    margin-right: 0;
+}
+.hot {
+    overflow: hidden;
+}
+.left {
+    clear: both;
+}
+.left:before, .left:after, .buttons:before, .buttons:after {
+    clear: both;
+    overflow: hidden;
+    content: '';
+}
+.success {
+    color: #468847;
+}
+.error {
+    color: #b94a48;
+}
+.info {
+    color: #3a87ad;
+}
+pre {
+    white-space: pre-wrap;
+}
+.handsontable {
+    clear: both;
+    width: 100%;
+    overflow: hidden
 }

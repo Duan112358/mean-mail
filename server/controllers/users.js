@@ -47,11 +47,12 @@ exports.create = function(req, res, next) {
     user.provider = 'local';
 
     // because we set our user.provider to local our models/user.js validation will always be true
-    req.assert('name', 'You must enter a name').notEmpty();
-    req.assert('email', 'You must enter a valid email address').isEmail();
-    req.assert('password', 'Password must be between 8-20 characters long').len(8, 20);
-    req.assert('username', 'Username cannot be more than 20 characters').len(1,20);
-    req.assert('confirmPassword', 'Passwords do not match').equals(req.body.password);
+    req.assert('name', '用户名不能为空').notEmpty();
+    req.assert('email', '邮箱格式不正确').isEmail();
+    req.assert('emailPassword', '邮箱密码不能为空').notEmpty();
+    req.assert('password', '密码长度必须介于8-20个字符的长度').len(8, 20);
+    req.assert('username', '昵称的长度不能超过20个字符').len(1,20);
+    req.assert('confirmPassword', '密码和确认密码不匹配').equals(req.body.password);
 
     var errors = req.validationErrors();
     if (errors) {
@@ -65,10 +66,10 @@ exports.create = function(req, res, next) {
             switch (err.code) {
                 case 11000:
                 case 11001:
-                    res.status(400).send('Username already taken');
+                    res.status(400).send('用户名已经存在');
                     break;
                 default:
-                    res.status(400).send('Please fill all the required fields');
+                    res.status(400).send('亲，请仔细填写必填项！');
             }
 
             return res.status(400);

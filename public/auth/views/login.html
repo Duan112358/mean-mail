@@ -1,34 +1,33 @@
-<div data-ng-controller="LoginCtrl">
+<div data-ng-controller="LoginCtrl" class="animated fadeInLeft">
     <div class="alert alert-danger animated fadeIn" ng-show="loginerror">{{loginerror}}</div>
-    <article>
-        <legend>
-            登录
-        </legend>
-        <fieldset>
+    <article class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                登录
+            </h1>
+        </div>
+        <div class="panel-body">
             <form ng-submit="login()" class="signin form-horizontal">
                 <div class="form-group">
-                    <label for="email" class="col-md-4 control-label">邮箱</label>
-                    <div class="col-md-8">
+                    <label for="email" class="col-md-2 control-label">邮箱</label>
+                    <div class="col-md-10">
                         <input required id="email" type="email" name="email" placeholder="Email" class="form-control" ng-model="user.email" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="col-md-4 control-label">密码</label>
-                    <div class="col-md-8">
+                    <label for="password" class="col-md-2 control-label">密码</label>
+                    <div class="col-md-10">
                         <input required id="password" type="password" name="password" placeholder="Password" class="form-control" ng-model="user.password" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-offset-4 col-md-8">
+                    <div class="col-md-offset-2 col-md-10">
                         <button type="submit" class="btn btn-primary">登录</button>&nbsp; &nbsp;
-                        <button ui-sref='auth.register' class="show-signup btn btn-default pull-right">去注册</button>
+                        <button ui-sref='auth.register' class="show-signup btn btn-link pull-right">去注册</button>
                     </div>
                 </div>
             </form>
-        </fieldset>
-        <fieldset>
-            <button class="btn btn-block" ng-click="test()">HELLO</button>
-        </fieldset>
+        </div>
 
     </article>
 

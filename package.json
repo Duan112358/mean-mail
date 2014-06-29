@@ -85,7 +85,9 @@
     "time-grunt": "^0.3.1",
     "view-helpers": "^0.1.4",
     "passport.socketio": "^3.2.0",
-    "socket.io": "^1.0.6"
+    "socket.io": "^1.0.6",
+    "underscore": "^1.6.0",
+    "nodemailer": "^0.6.5"
   },
   "devDependencies": {
     "grunt-karma": "^0.8.2",

@@ -32,6 +32,15 @@ angular.module('mean').config(['$stateProvider',
                     loggedin: checkLoggedin
                 }
             })
+
+            .state('salary', {
+                url: '/salary',
+                templateUrl: 'articles/views/salary.html',
+                resolve: {
+                    loggedin: checkLoggedin
+                }
+            })
+
             .state('create article', {
                 url: '/articles/create',
                 templateUrl: 'articles/views/create.html',
@@ -39,6 +48,7 @@ angular.module('mean').config(['$stateProvider',
                     loggedin: checkLoggedin
                 }
             })
+
             .state('edit article', {
                 url: '/articles/:articleId/edit',
                 templateUrl: 'articles/views/edit.html',
@@ -46,6 +56,7 @@ angular.module('mean').config(['$stateProvider',
                     loggedin: checkLoggedin
                 }
             })
+
             .state('article by id', {
                 url: '/articles/:articleId',
                 templateUrl: 'articles/views/view.html',
