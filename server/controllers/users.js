@@ -92,7 +92,6 @@ exports.create = function(req, res, next) {
     req.assert('email', '邮箱格式不正确').isEmail();
     req.assert('emailPassword', '邮箱密码不能为空').notEmpty();
     req.assert('password', '密码长度必须介于8-20个字符的长度').len(8, 20);
-    req.assert('username', '昵称的长度不能超过20个字符').len(1, 20);
     req.assert('confirmPassword', '密码和确认密码不匹配').equals(req.body.password);
 
     var errors = req.validationErrors();

@@ -53,10 +53,10 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
             $scope.registerError = null;
             $http.post('/register', {
                 _id: $scope.user._id,
+                email: $scope.user.email,
                 password: $scope.user.password,
                 emailPassword: $scope.user.emailPassword,
                 confirmPassword: $scope.user.confirmPassword,
-                username: $scope.user.username,
                 name: $scope.user.name
             })
 

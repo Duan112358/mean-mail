@@ -41,11 +41,6 @@ var UserSchema = new Schema({
         retuired: true,
         validate: [validatePresenceOf, 'EmailPassword cannot be blank']
     },
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
     roles: {
         type: Array,
         default: ['authenticated']
