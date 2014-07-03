@@ -8,6 +8,37 @@ var mongoose = require('mongoose'),
 
 
 /**
+ *   Comment Schema
+ */
+var CommentSchema = {
+    created: {
+        type: Date,
+        default: Date.now
+    },
+    nickname: {
+        type: String,
+        default: '',
+        trim: true
+    },
+    email: {
+        type: String,
+        default: '',
+        trim: true
+    },
+    homepage: {
+        type: String,
+        default: '',
+        trim: true
+    },
+    comment: {
+        type: String,
+        default: '',
+        trim: true
+    }
+};
+
+
+/**
  * Article Schema
  */
 var ArticleSchema = new Schema({
@@ -17,18 +48,29 @@ var ArticleSchema = new Schema({
     },
     title: {
         type: String,
-        required: true,
+        default: '',
+        trim: true
+    },
+    preview: {
+        type: String,
+        default: '',
         trim: true
     },
     content: {
         type: String,
-        required: true,
+        default: '',
         trim: true
     },
     user: {
         type: Schema.ObjectId,
         ref: 'User'
-    }
+    },
+    votes: {
+        type: Number,
+        default: 0
+    },
+    comments: [CommentSchema],
+    tags: [String]
 });
 
 /**

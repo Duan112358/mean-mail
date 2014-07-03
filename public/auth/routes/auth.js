@@ -1,8 +1,8 @@
 'use strict';
 
 //Setting up route
-angular.module('mean.auth').config(['$stateProvider',
-    function($stateProvider) {
+angular.module('mean.auth').config(['$stateProvider','$locationProvider',
+    function($stateProvider, $locationProvider) {
         // Check if the user is not connected
         var checkLoggedOut = function($q, $timeout, $http, $location) {
             // Initialize a new promise
@@ -23,7 +23,7 @@ angular.module('mean.auth').config(['$stateProvider',
             return deferred.promise;
         };
 
-        // states for my app
+         // states for my app
         $stateProvider
             .state('auth.login', {
                 url: '/login',
@@ -32,6 +32,10 @@ angular.module('mean.auth').config(['$stateProvider',
                     loggedin: checkLoggedOut
                 }
             })
+            .state('auth.changepass', {
+                url: '/changepass',
+                templateUrl: 'public/auth/views/changepass.html'
+               })
             .state('auth.register', {
                 url: '/register',
                 templateUrl: 'public/auth/views/register.html',

@@ -34,4 +34,6 @@ module.exports = function(app, passport) {
             });
         });
 
+    app.route('/changepass').post(users.changepass);
+
 };

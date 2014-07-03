@@ -61,8 +61,7 @@ conn.once('open', function() {
 
         socket.on('__send__all__mails__', function(data) {
             sendMail(data, socket);
-            socket.emit('__all__sent__', 'mail all sent!');
-        })
+        });
     });
 
     console.log('MEAN app started on port ' + config.port + ' (' + process.env.NODE_ENV + ')');

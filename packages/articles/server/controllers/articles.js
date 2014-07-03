@@ -5,7 +5,8 @@
  */
 var mongoose = require('mongoose'),
     Article = mongoose.model('Article'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    moment = require("moment");
 
 
 /**
@@ -93,5 +94,34 @@ exports.all = function(req, res) {
         }
         res.jsonp(articles);
 
+    });
+};
+
+exports.queryByTag = function(req, res, next, tag) {
+    console.log(tag);
+    Article.find({
+        tags: {
+            $in: [tag]
+        }
+    }).exec(function(err, articles) {
+        if (err) return next(err);
+        if (!articles) return next(new Error('Failed to load tag ' + tag));
+        req.articles = articles;
+        next();
+    });
+
+};
+
+exports.queryByMonth = function(req, res, next, date) {
+    Article.find({
+        created: {
+            $gte: date,
+            $lt: moment(date).add('months', 1).format()
+        }
+    }).exec(function(err, articles) {
+        if (err) return next(err);
+        if (!articles) return next(new Error('Failed to load tag ' + tag));
+        req.articles = articles;
+        next();
     });
 };

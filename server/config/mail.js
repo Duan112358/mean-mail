@@ -2,13 +2,12 @@
 
 var nodemailer = require('nodemailer');
 var _ = require('underscore');
-var fs = require('fs');
+var crypto = require('crypto');
+var async = require('async');
+var utils = require('./utils');
 
 
 module.exports = function(mails, socket) {
-
-    var User = require('mongoose').model('User');
-
     var auth = socket.conn.request.user;
 
     var _table_header;
@@ -57,20 +56,20 @@ module.exports = function(mails, socket) {
             titleIndex++;
             if (titleIndex == 1) {
                 _mail_subject = item[keys[0]];
-                socket.emit("__mail__sent__", tIndex);
+                //socket.emit("__mail__sent__", tIndex);
                 continue;
             }
             if (titleIndex == 2) {
                 _mail_title = item[keys[0]];
                 header_tpl += '<body class=\"content\"><div><h3>' + _mail_title + '</h3>';
-                socket.emit('__mail__sent__', tIndex);
+                //socket.emit('__mail__sent__', tIndex);
                 continue;
             }
             var comm = item[keys[0]] || '&nbsp;';
             var font = item[keys[1]] || 'h3';
 
             footer_tpl += '<' + font + '>' + comm + '</' + font + '>';
-            socket.emit("__mail__sent__", tIndex);
+            //socket.emit("__mail__sent__", tIndex);
         }
         footer_tpl += '</div></body></html>';
     }
@@ -79,6 +78,7 @@ module.exports = function(mails, socket) {
         // generate header body
         var thdata = data[0];
         var hkeys = _.keys(thdata);
+        var hrow = 2;
         if (isMergedHeader(data)) {
             var subthdata = data[1];
             delete thdata[hkeys[hkeys.length - 1]];
@@ -86,6 +86,7 @@ module.exports = function(mails, socket) {
             _table_header = generateHeader(thdata, subthdata);
             data.splice(0, 2); //remove header data
         } else {
+            hrow = 1;
             delete thdata[hkeys[hkeys.length - 1]];
             delete thdata[hkeys[hkeys.length - 2]];
             _table_header = generateHeader(thdata, false);
@@ -99,7 +100,8 @@ module.exports = function(mails, socket) {
         generateFooter(hkeys.slice(1, 3), _footer, socket);
         return {
             body: _.difference(data, _footer),
-            header: thdata
+            header: thdata,
+            hrow: hrow
         };
     }
 
@@ -183,17 +185,19 @@ module.exports = function(mails, socket) {
     }
 
 
-    if (mails.length < 2) {
-        return {
-            error: 'Empty collection.'
-        };
+    if (mails.length < 2 || (isMergedHeader(mails) && mails.length == 2)) {
+        console.log('empty collection');
+        socket.emit('__error__', {
+            status: 101,
+            msg: '没有可处理的数据'
+        });
+        return;
     }
 
-    User.findOne({
-        _id: auth._id
-    }).exec(function(err, user) {
+    utils.getUser(auth._id, function(err, user) {
         if (err) {
-            socket.emit('__error__', 'Permission denied!')
+            console.log(err);
+            socket.emit('__error__', 'Permission denied!');
         } else
         if (!user) {
             socket.emit('__error__', 'Failed to load User :' + auth.username);
@@ -202,52 +206,47 @@ module.exports = function(mails, socket) {
                 service: "QQex",
                 auth: {
                     user: user.email,
-                    pass: user.email_password
+                    pass: utils.decipherPass(user)
                 }
             });
 
             var _result = extractDataAndHeader(mails, socket);
             var thdata = _result.header;
+            var hrow_count = _result.hrow;
             mails = _result.body;
 
             var tindex;
             var haserror = false;
             var total = mails.length;
-            for (tindex in mails) {
-                var item = mails[tindex];
+            var sentCount = 0;
+
+            async.each(mails, function(item) {
                 var tbody = header_tpl + _table_header + generateBody(thdata, item) + footer_tpl;
-                var from = auth._id;
+                var from = auth.email;
                 var keys = _.keys(item);
                 var to = item[keys[keys.length - 2]];
                 var cc = item[keys[keys.length - 1]];
 
                 var msg = initMsg(from, to, cc, tbody);
 
-                if (haserror) {
-                    break;
-                }
-                var last = tindex;
-                (function(message, index) {
+                (function(message, mail) {
                     transport.sendMail(msg, function(err) {
                         if (err) {
                             if (!haserror) {
-                                socket.emit('__emailpass__error__', err.Error);
+                                utils.log(mail, user, err);
                                 console.log(err);
-                                haserror = true;
                             }
                         } else {
-                            socket.emit('__mail__sent__', index);
-                            if (index == (total - 1)) {
-                                socket.emit("__all__sent__");
+                            var index = mails.indexOf(mail);
+                            mails.splice(index, 1);
+                            socket.emit('__mail__sent__', index + hrow_count);
+                            if (!mails.length) {
+                                socket.emit("__all__sent__", hrow_count);
                             }
                         }
                     });
-                })(msg, last);
-            }
+                })(msg, item);
+            });
         }
-
-
     });
-
-
 };

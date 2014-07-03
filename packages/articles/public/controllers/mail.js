@@ -208,6 +208,8 @@ module.directive('dropSheet', ['$rootScope', 'ngSocket',
                     sending_spinner,
                     $container = $('.hot'),
                     $parent = elem.parent();
+                var _handsontable;
+
 
                 alertify.set({
                     labels: {    
@@ -291,26 +293,56 @@ module.directive('dropSheet', ['$rootScope', 'ngSocket',
                             return $parent.width();
                         },
                         height: function() {
-                            return $(window).height();
+                            return $(window).height() - 100;
                         },
                     });
 
                     $('.send').unbind('click');
                     $('.send').click(function() {
-                        sending_spinner = new Spinner().spin($('.hot')[0]);
+                        sending_spinner = new Spinner().spin($('.htCore')[0]);
+
                         $('.send').attr('disabled', true);
-                        $('.wtHolder').css('opacity', '.3');
+                        $('.htCore').css('opacity', '.3');
                         var data = _.reject(json, isEmptyRow);
                         socket.emit('__send__all__mails__', data);
                     });
                 };
 
-                socket.on("__all__sent__", function() {
-                    sending_spinner.stop();
-                    $(".send").attr("disabled", false);
-                    $(".wtHolder").css("opacity", "1");
-                    alertify.success("所有邮件已成功发送！");
+                socket.on("__all__sent__", function(head) {
+                    var targets = $('.htCore tr').slice(head + 1);
+                    var removed = false;
+                    targets.hide(1000, function() {
+                        if (!removed) {
+                            sending_spinner.stop();
+                            $(".send").attr("disabled", false);
+                            $(".htCore").css("opacity", "1");
+                            alertify.success("所有邮件已成功发送！");
+                            removed = true;
+                            if (!_handsontable) {
+                                _handsontable = $('.hot').handsontable('getInstance');
+                            }
+                            _handsontable.alter('remove_row', head, targets.length);
+                        }
+
+                    });
                 });
+
+                socket.on("__mail__sent__", function(index) {
+                    if (!_handsontable) {
+                        _handsontable = $('.hot').handsontable('getInstance');
+                    }
+                    _handsontable.alter("remove_row", index);
+                });
+
+                socket.on("__error__", function(err) {
+                    sending_spinner.stop();
+
+                    if (err.status == 101) {
+                        alertify.alert(err.msg);
+                    }
+                    console.log(err);
+                });
+
 
                 function isEmptyRow(row) {
                     if (!_.isEmpty(row)) {
@@ -364,26 +396,6 @@ module.directive('dropSheet', ['$rootScope', 'ngSocket',
 module.controller('MailController', ['$scope', '$stateParams', '$location', 'Global', 'ngSocket',
     function($scope, $stateParams, $location, Global, socket) {
         $scope.global = Global;
-        var _handsontable;
-
-        socket.on("__mail__sent__", function(index) {
-            if (!_handsontable) {
-                _handsontable = $('.hot').handsontable('getInstance')
-            }
-            _handsontable.alter("remove_row", index);
-        });
-
-
-        socket.on("__error__", function(err) {
-            if (err.status == 404) {
-                alertify.error("亲，你的账号还没有注册，请联系系统管理员。");
-            }
-            if (err.status == 409) {
-                alertify.error("邮箱密码更新失败。");
-            }
-            console.log(err);
-        });
-
 
         $scope.hasAuthorization = function(article) {
             if (!article || !article.user) return false;

@@ -9,7 +9,6 @@ module.exports = function(app) {
             var roles = (req.user ? req.user.roles : ['anonymous']);
             var menu = req.params.name ? req.params.name : 'main';
             var defaultMenu = (req.query.defaultMenu ? req.query.defaultMenu : []);
-
             defaultMenu.forEach(function(item, index) {
                 defaultMenu[index] = JSON.parse(item);
             });
@@ -19,7 +18,6 @@ module.exports = function(app) {
                 menu: menu,
                 defaultMenu: defaultMenu
             });
-
             res.jsonp(items);
         });
 

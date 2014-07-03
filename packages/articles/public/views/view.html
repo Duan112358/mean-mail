@@ -1,14 +1,114 @@
 <section data-ng-controller="ArticlesController" data-ng-init="findOne()">
-    <span>{{article.created | date:'medium'}}</span> /
-    <span>{{article.user.name}}</span>
-    <h2>{{article.title}}</h2>
-    <div data-ng-if="hasAuthorization(article)">
-        <a class="btn" href="/#!/articles/{{article._id}}/edit">
-            <i class="glyphicon glyphicon-edit"></i>
-        </a>
-        <a class="btn" data-ng-click="remove(article);">
-            <i class="glyphicon glyphicon-trash"></i>
-        </a>
+    <ul class="breadcrumb">
+        <li><a href="#!/articles">文章列表</a>
+        </li>
+        <li class="active" ng-bind="article.title"></li>
+    </ul>
+    <div class="panel panel-default animated fadeIn">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <strong>{{article.title}}</strong>
+                <span ng-show="global.user._id == article.user._id" class="btn btn-danger btn-xs pull-right modal-trigger" target-modal="#articleDeleteModal" ng-click="remove(article)">
+                    <i class="glyphicon glyphicon-trash icon-large"></i>
+                </span>
+                <a ng-show="global.user._id == article.user._id" href="/#!/articles/{{article._id}}/edit" class="btn btn-default btn-xs pull-right">
+                    <i class="glyphicon glyphicon-edit icon-large"></i>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-body" >
+            <div class="post-time text-right">
+                <i class="glyphicon glyphicon-user"></i>
+                <code>{{article.user.username}}</code>
+                <i class="glyphicon glyphicon-time"></i>
+                <code>{{article.created | date:'medium'}}</code>
+                <i class="glyphicon glyphicon-eye-open"></i>
+                <code ng-bind="article.votes"></code>
+            </div>
+            <div btf-markdown="article.content">
+            </div>
+        </div>
+        <div class="panel-footer">
+            <i class="glyphicon glyphicon-tag" ng-show="article.tags"></i> 
+            <span ng-repeat="tag in article.tags">
+                [
+                <a ng-href="#!/tag/{{tag}}" ng-bind="tag"></a>]
+            </span>
+        </div>
     </div>
-    <div>{{article.content}}</div>
+    <div class="comments-caption" ng-show="article.comments.length">
+        <span>
+            <span class="badge">{{article.comments.length}} comments</span>
+        </span>
+        <button class="btn btn-default pull-right" type="button" title="leave a comment" data-anchor-target="commentForm" data-anchor-focus="#nickname">
+            <i class="glyphicon glyphicon-comment icon-large"></i>
+        </button>
+    </div>
+    <ul class="list-group">
+        <div class="list-group-item" ng-repeat="comment in article.comments" id="{{comment._id}}">
+            <div class="row">
+                <div class="col-lg-1 text-center">
+                    <img data-gravatar-img="comment.email" src="" alt="{{comment.nickname}}" title="{{comment.nickname}}" class="img-rounded">
+                </div>
+                <div class="col-lg-11">
+                    <div class="list-group-item-heading">
+                        <strong>
+                            <a ng-href="{{comment.homepage}}" target="_blank" ng-bind="comment.nickname"></a>
+                        </strong>
+                        <code data-time-ago="comment.created" class="pull-right"></code>
+                    </div>
+                    <div class="list-group-item-text">
+                        <span ng-bind="comment.comment"></span>
+                        <button type="button" class="btn btn-default pull-right" data-comment-target="#commentForm" data-append-target="comment._id" title="reply" ng-hide="reply" ng-click="reply=true">
+                            <i class="glyphicon glyphicon-reply icon-large"></i>
+                        </button>
+                        <button type="button" class="btn btn-default pull-right" ng-show="reply" ng-click="reply=false">Cancel Reply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group-item" id="comment_area">
+            <div id="commentForm">
+                <form name="commentForm" ng-submit="makeComment()" role="form" class="form">
+                    <div class="form-group reply-title">
+                        <span class="title">LEAVE A COMMENT</span>
+                    </div>
+                    <div class="form-group">
+                        <input id="nickname" class="form-control" type="text" name="NickName" placeholder="Nickname" ng-model="comment.nickname" required>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="Email" placeholder="Email" ng-model="comment.email">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="homepage" placeholder="Homepage" ng-model="comment.homepage">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" rows="5" name="comment" placeholder="Leave a comment" ng-model="comment.comment" required></textarea>
+                    </div>
+                    <p>
+                        <button type="submit" class="btn btn-primary" ng-disabled="commentForm.$invalid">Post Comment</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </ul>
+    <div class="modal animated bounceInDown" id="articleDeleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete Article</h4>
+                </div>
+                <div class="modal-body">
+                    <strong>Be sure to delete article :
+                        <span class="text-danger">{{articleToDelete.title}} ?</span>
+                    </strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger modal-hidder" target-modal="#articleDeleteModal" target-action="confirmDelete()">Confirm Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

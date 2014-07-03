@@ -50,12 +50,7 @@ var UserSchema = new Schema({
         type: String,
         default: 'local'
     },
-    salt: String,
-    facebook: {},
-    twitter: {},
-    github: {},
-    google: {},
-    linkedin: {}
+    salt: String
 });
 
 /**
@@ -76,7 +71,7 @@ UserSchema.virtual('emailPassword').set(function(pass) {
     if (!this.salt) {
         this.salt = this.makeSalt();
     }
-    this.email_password = this.hashPassword(pass);
+    this.email_password = this.cipherPass(pass, this.salt);
 }).get(function() {
     return this._email_pass;
 });
@@ -150,7 +145,22 @@ UserSchema.methods = {
         if (!password || !this.salt) return '';
         var salt = new Buffer(this.salt, 'base64');
         return crypto.pbkdf2Sync(password, salt, 10000, 64).toString('base64');
+    },
+
+    /**
+     * ctypto password
+     *
+     * @param {String} password
+     * @return {String}
+     * @api public
+     */
+    cipherPass: function(pass, salt) {
+        pass = new Buffer(pass);
+        var cipher = crypto.createCipher('blowfish', salt);
+        var encrypted = cipher.update(pass, 'binary', 'hex');
+        encrypted += cipher.final('hex');
+        return encrypted;
     }
-};
+}
 
 mongoose.model('User', UserSchema);

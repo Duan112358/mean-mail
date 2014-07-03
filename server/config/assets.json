@@ -2,7 +2,8 @@
     "core": {
         "css": {
             "public/build/css/dist.min.css": [
-                "public/**/assets/css/*.css"
+                "public/**/assets/css/*.css",
+                "public/system/lib/bootstrap-tagsinput/bootstrap-tagsinput.css"
             ]
         },
         "js": {
@@ -17,8 +18,14 @@
                 "public/system/excel/xlsx.js",
                 "public/system/excel/shim.js",
                 "public/system/excel/spin.js",
+                "public/system/lib/bootstrap-tagsinput/dist/bootstrap-tagsinput.js",
+                "public/system/lib/moment/moment.js",
                 "public/system/lib/angular/angular.js",
                 "public/system/lib/angular-socket-io/socket.js",
+                "public/system/lib/showdown/src/showdown.js",
+                "public/system/lib/angular-markdown-directive/markdown.js",
+                "public/system/lib/angular-sanitize/angular-sanitize.js",
+                "public/system/lib/bootstrap-tagsinput/dist/bootstrap-tagsinput-angular.js",
                 "public/system/lib/angular-mocks/angular-mocks.js",
                 "public/system/lib/angular-cookies/angular-cookies.js",
                 "public/system/lib/angular-resource/angular-resource.js",

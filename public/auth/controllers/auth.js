@@ -8,8 +8,8 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
     }
 )
 
-.controller('LoginCtrl', ['$scope', '$rootScope', '$http', '$location', 'ngSocket',
-    function($scope, $rootScope, $http, $location, ngSocket) {
+.controller('LoginCtrl', ['$scope', '$rootScope', '$http', '$location',
+    function($scope, $rootScope, $http, $location) {
         // This object will be filled by the form
         $scope.user = {};
 
@@ -33,7 +33,7 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
                         window.location = response.redirect;
                     }
                 } else {
-                    $location.url('/');
+                    $location.url('/salary');
                 }
             })
 
@@ -41,26 +41,18 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
                 $scope.loginerror = '亲，你输错了密码，再试一次吧！';
             });
         };
-
-        $scope.test = function() {
-            ngSocket.emit('send-msg', 'hello socket.io!');
-        };
-
-        ngSocket.on('back-msg', function(data) {
-            alert(data);
-        });
     }
 ])
 
-.controller('RegisterCtrl', ['$scope', '$rootScope', '$http', '$location',
-    function($scope, $rootScope, $http, $location) {
-        $scope.user = {};
+.controller('RegisterCtrl', ['$scope', '$rootScope', '$http', '$location','Global',
+    function($scope, $rootScope, $http, $location, Global) {
+        $scope.user = Global.user;
 
         $scope.register = function() {
             $scope.usernameError = null;
             $scope.registerError = null;
             $http.post('/register', {
-                email: $scope.user.email,
+                _id: $scope.user._id,
                 password: $scope.user.password,
                 emailPassword: $scope.user.emailPassword,
                 confirmPassword: $scope.user.confirmPassword,
@@ -70,7 +62,7 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
 
             .success(function() {
                 // authentication OK
-                $scope.registerError = 0;
+                $scope.changepassError = 0;
                 $rootScope.user = $scope.user;
                 $rootScope.$emit('loggedin');
                 $location.url('/');
@@ -81,13 +73,44 @@ angular.module('mean.controllers.login', ['btford.socket-io'])
                 if (error === '亲，这个名字太抢手，换一个吧？') {
                     $scope.usernameError = error;
                 } else {
-                    $scope.registerError = error;
-                    for(var index in error){
+                    $scope.changepassError = error;
+                    for (var index in error) {
                         var err = error[index];
-                        $scope.user[err.param+'Error'] = err.msg;
+                        $scope.user[err.param + 'Error'] = err.msg;
                     }
                 }
             });
         };
+    }
+])
+
+angular.module('mean').controller('ChangepassCtrl', ['$scope', '$http', 'Global', '$rootScope', '$location',
+    function($scope, $http, Global, $rootScope, $location) {
+        $scope.user = Global.user;
+        $scope.changepass = function() {
+            $scope.changepassError = null;
+            $http.post('/changepass', {
+                _id: $scope.user._id,
+                password: $scope.user.password,
+                emailPassword: $scope.user.emailPassword,
+                confirmPassword: $scope.user.confirmPassword
+            })
+
+            .success(function() {
+                // authentication OK
+                $scope.changepassError = 0;
+                $rootScope.user = $scope.user;
+                $rootScope.$emit('loggedin');
+                $location.url('/');
+            })
+
+            .error(function(error) {
+                $scope.changepassError = error;
+                for (var index in error) {
+                    var err = error[index];
+                    $scope.user[err.param + 'Error'] = err.msg;
+                }
+            });
+        }
     }
 ]);

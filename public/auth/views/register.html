@@ -21,7 +21,7 @@
                         <input id="email" type="email" name="email" placeholder="Email" class="form-control" ng-model="user.email" />
                     </div>
                 </div>
-                <div class="form-group" ng-class="{'has-error':user.email_passwordError}">
+                <div class="form-group" ng-class="{'has-error':user.emailPasswordError}">
                     <label for="email" class="col-md-4 control-label">邮箱密码</label>
                     <div class="col-md-8">
                         <input id="email" type="password" name="emailPassword" placeholder="Email Password" class="form-control" ng-model="user.emailPassword" />
@@ -47,8 +47,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-4 col-md-8">
-                        <button type="submit" class="btn btn-primary">注册</button>
-                        <a ui-sref='auth.login' class="show-login btn btn-link pull-right">登录</a>
+                        <button type="submit" class="btn btn-primary btn-block">注册</button>
                     </div>
                 </div>
             </form>

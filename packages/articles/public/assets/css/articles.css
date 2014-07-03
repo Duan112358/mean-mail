@@ -56,3 +56,103 @@ pre {
     width: 100%;
     overflow: hidden
 }
+
+/* custom */
+ body {
+    font-family:"Microsoft Yahei UI", "Microsoft YaHei", SimHei, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+    background-color: rgba(142, 193, 218, .5)
+}
+.navbar {
+    border-radius: 0;
+    border:none;
+    background-color: rgba(32, 32, 32, 0.8);
+    margin-bottom: 0;
+}
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a {
+    color:#dfdfdf;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-nav > li > a:hover {
+    color:#fff;
+}
+.panel-default {
+    border-color: #ededed;
+}
+.panel-default .panel-heading {
+    background-color: #f9f9f9;
+    border-bottom-color: #ededed;
+}
+.panel-default .panel-title {
+    font-weight: normal;
+}
+.panel-title .btn , .panel-footer .btn{
+    margin: 0 3px;
+}
+.panel-body {
+    line-height: 180%;
+    font-size: 110%;
+}
+.panel-body.preview {
+    max-height: 400px;
+}
+.panel-body p {
+    text-indent: 2em;
+}
+.panel-body img {
+    max-width:100%;
+    height:auto;
+}
+p img {
+    display: block;
+    height: auto;
+    margin: auto;
+    max-width: 100%;
+    padding: 4px;
+    line-height: 1.428571429;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+.panel-footer {
+    border-top-color: #ededed;
+    background-color: #fcfcfc;
+}
+.post-time {
+    color: gray;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+}
+.img-preview .img-rounded {
+    max-width: 300px;
+    height: 150px;
+}
+.comments-caption {
+    padding: 10px;
+    background-color: #fdfdfd;
+    margin-left: 1px;
+    margin-right: 1px;
+    border-radius: 4px 4px 0 0;
+}
+.comments-caption .btn {
+    margin-top: -6px;
+}
+
+.list-group-item .row {
+    margin-bottom: 10px;
+}
+
+.form{
+    overflow: hidden;
+}
+
+.reply-title .title{
+    color:#d1dfec;
+    text-shadow:1px 1px 1px #fff;
+    font-size: 30px;
+    padding: 5px 0px;
+    margin-top: 5px;
+    display: block;
+}

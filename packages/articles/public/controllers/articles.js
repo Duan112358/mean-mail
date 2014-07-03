@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Global', 'Articles',
+angular.module('mean')
+
+.controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Global', 'Articles',
     function($scope, $stateParams, $location, Global, Articles) {
         $scope.global = Global;
 
@@ -71,5 +73,23 @@ angular.module('mean').controller('ArticlesController', ['$scope', '$stateParams
                 $scope.article = article;
             });
         };
+
+        $scope.makeComment = function() {
+
+            var article = $scope.article;
+            article.comments.push($scope.comment);
+
+            if (!article.updated) {
+                article.updated = [];
+            }
+
+            article.updated.push(new Date().getTime());
+
+            article.$update(function() {
+                $location.path('articles/' + article._id);
+                $scope.comment = {};
+            });
+        }
+
     }
 ]);

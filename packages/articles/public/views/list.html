@@ -1,21 +1,72 @@
 <section data-ng-controller="ArticlesController" data-ng-init="find()">
-    <ul class="articles unstyled">
+    <ul class="breadcrumb" ng-show="currenttag">
+        <li>
+            <a href="#!/articles">文章列表</a>
+        </li>
+        <li>tags</li>
+        <li class="active" ng-bind="currenttag"></li>
+    </ul>
+    <ul class="list-unstyled">
         <li data-ng-repeat="article in articles">
-            <span>{{article.created | date:'medium'}}</span> /
-            <span>{{article.user.name}}</span>
-            <h2>
-                <a data-ng-href="#!/articles/{{article._id}}">{{article.title}}</a>
-                <span data-ng-if="hasAuthorization(article)">
-                    <a class="btn" href="/#!/articles/{{article._id}}/edit">
-                        <i class="glyphicon glyphicon-edit"></i>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-ng-href="#!/articles/{{article._id}}">
+                            <strong>{{article.title}}</strong>
+                        </a>
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <div class="post-time text-right">
+                        <i class="glyphicon glyphicon-user"></i>
+                        <code>
+                            {{article.user.username}}
+                        </code>
+                        <i class="glyphicon glyphicon-time"></i>
+                        <code time-ago="article.created">
+                            {{article.created | date:'medium'}}
+                        </code>
+                        <i class="glyphicon glyphicon-eye-open"></i>
+                        <code ng-bind="article.votes"></code>
+                    </div>
+                    <div btf-markdown="article.preview || article.content"></div>
+                </div>
+                <div class="panel-footer">
+                    <i class="glyphicon glyphicon-tag"></i> 
+                    <span ng-repeat="tag in article.tags">
+                        [
+                        <a ng-href="#!/tag/{{tag}}" ng-bind="tag"></a>
+                        ]
+                    </span>
+                    <button data-ng-show="global.user._id == article.user._id" ng-click="articleToDelete = article" class="btn btn-xs btn-danger pull-right modal-trigger" target-modal="#articleDeleteModal" target-action="remove(article)">
+                        <i class="glyphicon glyphicon-trash icon-large"></i>
+                    </button>
+                    <a ng-show="global.user._id == article.user._id" href="/#!/articles/{{article._id}}/edit" class="btn btn-default btn-xs pull-right">
+                        <i class="glyphicon glyphicon-edit icon-large"></i>
                     </a>
-                    <a class="btn" data-ng-click="remove(article);">
-                        <i class="glyphicon glyphicon-trash"></i>
-                    </a>
-                </span>
-            </h2>
-            <div>{{article.content}}</div>
+                </div>
+            </div>
         </li>
     </ul>
-    <h1 data-ng-hide="!articles || articles.length">No articles yet. <br> Why don't you <a href="/#!/articles/create">Create One</a>?</h1>
+    <h1 data-ng-hide="!articles || articles.length">No articles yet.
+        <br>Why don't you <a href="/#!/articles/create">Create One</a>?
+    </h1>
+    <div class="modal animated bounceInDown" id="articleDeleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title text-danger">Delete Article</h4>
+                </div>
+                <div class="modal-body">
+                    <strong>Be sure to delete article :
+                        <code>{{articleToDelete.title}}</code>?</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger modal-hidder" target-modal="#articleDeleteModal" target-action="confirmDelete()">Confirm Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
