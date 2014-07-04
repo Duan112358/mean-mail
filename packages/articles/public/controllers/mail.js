@@ -359,16 +359,12 @@ module.directive('dropSheet', ['$rootScope', 'ngSocket',
                     on: {
                         workstart: function() {
                             spinner = new Spinner().spin(elem[0]);
-                            $('.buttons').hide();
-                            $('.hot').css('opacity', 0);
                         },
                         workend: function() {
                             spinner.stop();
-                            elem.fadeOut(1000, function() {
-                                $('.buttons, .hot').show(800, function() {
-                                    $('.hot').css('opacity', 1);
-                                });
-                            });
+                            elem.slideUp(500);
+                            $('.buttons, .hot').delay(400).show(1000);
+
                         },
                         sheet: _onsheet
                     },

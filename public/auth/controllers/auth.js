@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('mean.controllers.login', ['btford.socket-io'])
+angular.module('mean.controllers.login',[])
 
 .factory('ngSocket',
     function(socketFactory) {

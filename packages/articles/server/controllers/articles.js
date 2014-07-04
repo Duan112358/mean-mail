@@ -27,11 +27,12 @@ exports.article = function(req, res, next, id) {
 exports.create = function(req, res) {
     var article = new Article(req.body);
     article.user = req.user;
+    console.log(JSON.stringify(article));
 
     article.save(function(err) {
         if (err) {
             return res.jsonp(500, {
-                error: 'Cannot save the article'
+                error: err
             });
         }
         res.jsonp(article);

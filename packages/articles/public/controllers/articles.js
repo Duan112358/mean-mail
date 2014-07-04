@@ -14,15 +14,15 @@ angular.module('mean')
         $scope.create = function(isValid) {
             if (isValid) {
                 var article = new Articles({
-                    title: this.title,
-                    content: this.content
+                    title: $scope.article.title,
+                    content: $scope.article.content
                 });
                 article.$save(function(response) {
                     $location.path('articles/' + response._id);
                 });
 
-                this.title = '';
-                this.content = '';
+                $scope.article.title = '';
+                $scope.article.content = '';
             } else {
                 $scope.submitted = true;
             }
